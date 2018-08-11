@@ -20,6 +20,6 @@
     "clean": "rm -Rf ./dist/*",
     "start": "parcel ./src/index.html",
     "cypress": "cypress open",
-    "build": "parcel build src/index.html --public-url ./ && workbox injectManifest workbox-config.js && cp _redirects dist/"
+    "build": "parcel build src/index.html --public-url ./ && workbox injectManifest workbox-config.js"
   }
 }
