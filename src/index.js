@@ -19,7 +19,7 @@ if ('serviceWorker' in navigator) {
 let id = "0B-K7oJWHTbZ8RjZ0LWhEM3JQbm8";
 
 let options = {
-  "clientId": "349923725301-cn75hqucfe63q2r40j1i40oiuocgtpst.apps.googleusercontent.com",
+  "clientId": "292206642696-eik80a3lc7b2ajp7sfcg2p8tkmiumbc4.apps.googleusercontent.com",
   "scope": [
     "profile",
     "https://www.googleapis.com/auth/drive.file",
