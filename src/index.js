@@ -1,5 +1,4 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
-import TouchModule from 'diagram-js/lib/navigation/touch';
 import DriveAppsUtil from 'drive-apps-util';
 import MarterialDesign from 'material-design-lite';
 
@@ -51,16 +50,20 @@ driveAppsUtil.init().then(() => {
           showErrorMessage(reason);
         });
       }
-      else {
-        let text = window.localStorage.getItem("bpmndoc");
-        if (text) {
-          loadViewer(text);
-          document.getElementById('docinfo').textContent = window.localStorage.getItem("bpmndoctitle");
-          document.getElementById('docinfodrawer').textContent = window.localStorage.getItem("bpmndoctitle");
-          document.title = window.localStorage.getItem("bpmndoctitle");
-        }
+      else if (state.action === 'create') {
+        create(state.folderId);
       }
     }
+    else {
+      let text = window.localStorage.getItem("bpmndoc");
+      if (text) {
+        loadViewer(text);
+        document.getElementById('docinfo').textContent = window.localStorage.getItem("bpmndoctitle");
+        document.getElementById('docinfodrawer').textContent = window.localStorage.getItem("bpmndoctitle");
+        document.title = window.localStorage.getItem("bpmndoctitle");
+      }
+    }
+
   });
 });
 
@@ -102,6 +105,44 @@ window.save = () => {
   });
 }
 
+function create(folderId) {
+  let initialDiagram =
+  '<?xml version="1.0" encoding="UTF-8"?>' +
+  '<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                    'xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" ' +
+                    'xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" ' +
+                    'xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" ' +
+                    'targetNamespace="http://bpmn.io/schema/bpmn" ' +
+                    'id="Definitions_1">' +
+    '<bpmn:process id="Process_1" isExecutable="false">' +
+      '<bpmn:startEvent id="StartEvent_1"/>' +
+    '</bpmn:process>' +
+    '<bpmndi:BPMNDiagram id="BPMNDiagram_1">' +
+      '<bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">' +
+        '<bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">' +
+          '<dc:Bounds height="36.0" width="36.0" x="173.0" y="102.0"/>' +
+        '</bpmndi:BPMNShape>' +
+      '</bpmndi:BPMNPlane>' +
+    '</bpmndi:BPMNDiagram>' +
+  '</bpmn:definitions>';
+  let metadata = JSON.stringify({
+    name: "New Process",
+    mimeType: "application/bpmn+xml",
+    parents: [folderId]
+  });
+  driveAppsUtil.createDocument(metadata, initialDiagram).then((fileinfo) => {
+    id = fileinfo.id;
+    window.localStorage.setItem("bpmndoc", initialDiagram);
+    loadViewer(initialDiagram);
+    document.getElementById('docinfo').textContent = fileinfo.name;
+    document.getElementById('docinfodrawer').textContent = fileinfo.name;
+    document.title = fileinfo.name;
+    window.localStorage.setItem("bpmndoctitle", fileinfo.name);
+    showInfoMessage("New BPMN process created")
+
+  });
+}
+
 function showUserImage(user) {
   document.getElementById('userimage').classList.remove("is-hidden");
   document.getElementById('userimage').classList.add("visible");
@@ -112,17 +153,19 @@ function loadViewer(text) {
   var editor = new BpmnModeler({ container: '#editor', position: "absolute" });
   window.editor = editor;
   document.getElementById('splash').style.visibility = "hidden";
-  editor.importXML(text, function (err) {
-
-    if (err) {
-      showErrorMessage('Error loading BPMN model: ' + err);
-    }
-    else {
-      editor.get('canvas').zoom('fit-viewport', 'auto');
-      showInfoMessage('BPMN model loaded');
-    }
-  });
+  editor.importXML(text, done);  
 }
+
+var done = function (err) {
+
+  if (err) {
+    showErrorMessage('Error loading BPMN model: ' + err);
+  }
+  else {
+    editor.get('canvas').zoom('fit-viewport', 'auto');
+    showInfoMessage('BPMN model loaded');
+  }
+};
 
 function showErrorMessage(message) {
   if (typeof message.status !== 'undefined') {
