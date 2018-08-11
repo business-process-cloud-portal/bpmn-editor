@@ -1,0 +1,31 @@
+footer.mdl-mini-footer {
+    padding: 5px 16px;
+}
+
+.is-hidden {
+    visibility: hidden;
+}
+
+.is-visible {
+    visibility: visible;
+}
+
+.demo-card-wide.mdl-card {
+    position:fixed;
+    top: 50%;
+    left: 50%;
+    width:20em;
+    height:20em;
+    margin-top: -9em; /*set to a negative number 1/2 of your height*/
+    margin-left: -15em; /*set to a negative number 1/2 of your width*/
+    border: 1px solid #ccc;
+    background-color: #f3f3f3;    
+  }
+  .demo-card-wide > .mdl-card__title {
+    color: #fff;
+    height: 176px;
+    background: url('./img/ms-icon-310x310.png') center / cover;
+  }
+  .demo-card-wide > .mdl-card__menu {
+    color: #fff;
+  }
