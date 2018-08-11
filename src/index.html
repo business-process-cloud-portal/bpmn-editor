@@ -19,8 +19,10 @@
         <div class="mdl-layout__header-row">
             <span class="mdl-layout-title mdl-layout--large-screen-only">Cloud57 BPMN Editor</span>
             <div class="mdl-layout-spacer mdl-layout--large-screen-only"></div>
-            <span id="docinfo" class="mdl-layout-title mdl-layout--large-screen-only"></span>
-            
+            <div class="mdl-textfield mdl-js-textfield mdl-layout-title mdl-layout--large-screen-only">
+              <input class="mdl-textfield__input" type="text" id="docinfo">
+              <label class="mdl-textfield__label" for="docinfo"></label>
+            </div>
             <div class="mdl-layout-spacer"></div>
             <div id="actions">
               <button id="bt_save" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" onclick="save()">
