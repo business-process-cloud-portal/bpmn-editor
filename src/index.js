@@ -42,7 +42,7 @@ driveAppsUtil.init().then(() => {
           showErrorMessage(reason);
         });
         driveAppsUtil.getDocumentMeta(id).then((fileinfo) => {
-          document.getElementById('docinfo').textContent = fileinfo.name;
+          document.getElementById('docinfo').value = fileinfo.name;
           document.getElementById('docinfodrawer').textContent = fileinfo.name;
           document.title = fileinfo.name;
           window.localStorage.setItem("bpmndoctitle", fileinfo.name);
@@ -58,7 +58,7 @@ driveAppsUtil.init().then(() => {
       let text = window.localStorage.getItem("bpmndoc");
       if (text) {
         loadViewer(text);
-        document.getElementById('docinfo').textContent = window.localStorage.getItem("bpmndoctitle");
+        document.getElementById('docinfo').value = window.localStorage.getItem("bpmndoctitle");
         document.getElementById('docinfodrawer').textContent = window.localStorage.getItem("bpmndoctitle");
         document.title = window.localStorage.getItem("bpmndoctitle");
       }
@@ -80,7 +80,7 @@ window.exportSVG = function saveSVG() {
     });
 
     var a = document.createElement('a');
-    a.setAttribute('download', document.getElementById('docinfo').textContent + ".svg");
+    a.setAttribute('download', document.getElementById('docinfo').value + ".svg");
     a.setAttribute('href', url);
     a.setAttribute('target', '_blank');
     a.dispatchEvent(event);
@@ -90,12 +90,12 @@ window.exportSVG = function saveSVG() {
 window.save = () => {
   editor.saveXML({ format: true }, function (err, xml) {
     let metadata = JSON.stringify({
-      name: document.title,
+      name: document.getElementById('docinfo').value,
       mimeType: "application/bpmn+xml"
     });
 
     driveAppsUtil.updateDocument(id, metadata, xml).then((fileinfo) => {
-      document.getElementById('docinfo').textContent = fileinfo.name;
+      document.getElementById('docinfo').value = fileinfo.name;
       document.getElementById('docinfodrawer').textContent = fileinfo.name;
       document.title = fileinfo.name;
       window.localStorage.setItem("bpmndoctitle", fileinfo.name);
@@ -134,7 +134,7 @@ function create(folderId) {
     id = fileinfo.id;
     window.localStorage.setItem("bpmndoc", initialDiagram);
     loadViewer(initialDiagram);
-    document.getElementById('docinfo').textContent = fileinfo.name;
+    document.getElementById('docinfo').value = fileinfo.name;
     document.getElementById('docinfodrawer').textContent = fileinfo.name;
     document.title = fileinfo.name;
     window.localStorage.setItem("bpmndoctitle", fileinfo.name);
