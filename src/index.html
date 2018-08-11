@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cloud57 BPMN Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
+    <link rel="stylesheet" href="../node_modules/bpmn-js/dist/assets/diagram-js.css" />
+    <link rel="stylesheet" href="../node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css" />    
+    <link rel="stylesheet" href="../node_modules/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-green.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" crossorigin='anonymous'>
+</head>
+<body>
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--no-desktop-drawer-button">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout-icon"></div>
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title mdl-layout--large-screen-only">Cloud57 BPMN Editor</span>
+            <div class="mdl-layout-spacer mdl-layout--large-screen-only"></div>
+            <span id="docinfo" class="mdl-layout-title mdl-layout--large-screen-only"></span>
+            
+            <div class="mdl-layout-spacer"></div>
+            <div id="actions">
+              <button id="bt_save" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" onclick="save()">
+                <i class="material-icons">save</i>
+              </button>
+              <div class="mdl-tooltip" for="bt_save">Save diagramm</div>
+
+              <button id="bt_save_svg" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" onclick="exportSVG()">
+                <i class="material-icons">cloud_download</i>
+              </button>
+              <div class="mdl-tooltip" for="bt_save_svg">Download diagramm as SVG</div>
+                
+              <button id="bt_fit_to_viewport" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" onclick="editor.get('canvas').zoom('fit-viewport', 'auto')">
+                <i class="material-icons">zoom_out_map</i>
+              </button>
+              <div class="mdl-tooltip" for="bt_fit_to_viewport">Fit to page</div>
+    
+              <button id="bt_zoom_in" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" onclick="editor.get('zoomScroll').stepZoom(1)">
+                <i class="material-icons">zoom_in</i>
+              </button>
+              <div class="mdl-tooltip" for="bt_zoom_in">Zoom in</div>
+    
+              <button id="bt_zoom_out" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" onclick="editor.get('zoomScroll').stepZoom(-1)">
+                <i class="material-icons">zoom_out</i>
+              </button>
+              <div class="mdl-tooltip" for="bt_zoom_out">Zoom out</div>
+            </div>
+            <div class="mdl-layout-spacer mdl-layout--large-screen-only"></div>
+            <img id="userimage" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-layout--large-screen-only is-hidden" ></img>
+          </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">Cloud57 BPMN Editor</span>
+            <span id="docinfodrawer" class="title"></span>
+          </div>
+        <!-- Left aligned menu below button -->
+        <main class="mdl-layout__content"><div id="editor">
+          <div id="splash" class="demo-card-wide mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">Cloud57 BPMN Editor</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+              Displays BPMN diagrams direct from Google Drive. If you want to use
+              this app, you have to install it to your Drive Apps and then open 
+              a BPMN diagram from drive with "Open with..." and choose the BPMN Editor.
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+              <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://gsuite.google.com/marketplace/?hl=de">
+                Go to G Suite Marketplace
+              </a>
+            </div>
+            <!--div class="mdl-card__menu">
+              <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                <i class="material-icons">share</i>
+              </button>
+            </div-->
+          </div>
+        </div></main>
+        <footer class="mdl-mini-footer">
+            <div class="mdl-mini-footer__left-section">
+          <ul class="mdl-mini-footer__link-list">
+            <li><a href="https://www.cloud57.de" class="footer-nav">Powered by Cloud57</a></li>
+          </ul>
+          </div>
+          <div class="mdl-mini-footer__right-section">
+              <ul class="mdl-mini-footer__link-list">
+                  <li><a id="support" href="https://github.com/business-process-cloud-portal/bpmn-editor/issues" class="footer-nav" target="_blank">Support</a></li>
+                  <div class="mdl-tooltip mdl-tooltip--top" for="support">Create new feature requests, bug reports or ask for help</div>
+                  <li><a id="impressum" href="https://www.cloud57.de/?showImp" class="footer-nav" target="_blank">Imprint</a></li>
+                  <div class="mdl-tooltip mdl-tooltip--top" for="impressum">Read our imprint</div>
+                  <li><a id="dataprotection" href="https://www.cloud57.de/?showImp" class="footer-nav" target="_blank">Data protection</a></li>
+                  <div class="mdl-tooltip mdl-tooltip--top" for="dataprotection">Read more about our data protection</div>
+              </ul>
+              </div>
+        </footer>
+      </div>
+      <div aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-snackbar mdl-js-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button type="button" class="mdl-snackbar__action"></button>
+      </div>
+      <script src="index.js"></script>
+    </body>
+    
+</html>
