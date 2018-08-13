@@ -1,6 +1,9 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import DriveAppsUtil from 'drive-apps-util';
+import canvg from 'canvg';
+import URLSafeBase64 from 'urlsafe-base64';
 import MarterialDesign from 'material-design-lite';
+
 
 
 
@@ -88,21 +91,29 @@ window.exportSVG = function saveSVG() {
 }
 
 window.save = () => {
-  editor.saveXML({ format: true }, function (err, xml) {
-    let metadata = JSON.stringify({
-      name: document.getElementById('docinfo').value,
-      mimeType: "application/bpmn+xml"
+  convertToPNG().then((img) => {
+    editor.saveXML({ format: true }, function (err, xml) {
+      let metadata = JSON.stringify({
+        name: document.getElementById('docinfo').value,
+        mimeType: "application/bpmn+xml",
+        contentHints: {
+          thumbnail: {
+            image: img,
+            mimeType: "image/png"
+          }
+        }
+      });
+  
+      driveAppsUtil.updateDocument(id, metadata, xml).then((fileinfo) => {
+        document.getElementById('docinfo').value = fileinfo.name;
+        document.getElementById('docinfodrawer').textContent = fileinfo.name;
+        document.title = fileinfo.name;
+        window.localStorage.setItem("bpmndoctitle", fileinfo.name);
+        showInfoMessage("BPMN model stored")
+      });
     });
-
-    driveAppsUtil.updateDocument(id, metadata, xml).then((fileinfo) => {
-      document.getElementById('docinfo').value = fileinfo.name;
-      document.getElementById('docinfodrawer').textContent = fileinfo.name;
-      document.title = fileinfo.name;
-      window.localStorage.setItem("bpmndoctitle", fileinfo.name);
-      showInfoMessage("BPMN model stored")
-    });
-
   });
+
 }
 
 function create(folderId) {
@@ -190,4 +201,15 @@ function showInfoMessage(message) {
       message: message
     }
   );
+}
+
+function convertToPNG() {
+  return new Promise((resolve, reject) => {
+    editor.saveSVG({}, function (err, svgdata) {
+      canvg('convert', svgdata);
+      var canvas = document.getElementById("convert");
+      var img = canvas.toDataURL("image/png");
+      resolve(URLSafeBase64.encode(img.substring(img.indexOf(',')+1,img.length)));
+    });
+  });
 }
