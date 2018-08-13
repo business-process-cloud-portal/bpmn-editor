@@ -29,7 +29,7 @@ let options = {
 let driveAppsUtil = new DriveAppsUtil(options);
 driveAppsUtil.init().then(() => {
   driveAppsUtil.login().then((user) => {
-    showUserImage(user);
+    showUserImage();
 
     if (window.location.search) {
       let state = JSON.parse(decodeURI(window.location.search.substr(7)));
@@ -143,10 +143,10 @@ function create(folderId) {
   });
 }
 
-function showUserImage(user) {
+function showUserImage() {
   document.getElementById('userimage').classList.remove("is-hidden");
   document.getElementById('userimage').classList.add("visible");
-  document.getElementById('userimage').src = user.get().getBasicProfile().getImageUrl();
+  document.getElementById('userimage').src = window.gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getImageUrl();
 }
 
 function loadViewer(text) {
